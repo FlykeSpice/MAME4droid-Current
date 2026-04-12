@@ -181,7 +181,7 @@ void myosd_speed_hack(running_machine& machine)
 	auto *nl_device = root_device.subdevice<netlist_mame_sound_device>("snd_nl");
 	if (nl_device)
 	{
-		nl_device.set_setup_func([](netlist::nlparse_t &setup)
+		nl_device->set_setup_func([](netlist::nlparse_t &setup)
 		{
 			INCLUDE(kidniki)
 			PARAM(SOLVER.FREQ, 24000) //Halve the Solver's running frequency
