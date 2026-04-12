@@ -180,7 +180,7 @@ void myosd_speed_hack(running_machine& machine)
 	}
 
 	//FlykeSpice: Irem M62 sound netlist speed hack
-	auto *nl_device = root_device.subdevice<netlist_mame_sound_device>("snd_nl");
+	auto *nl_device = root_device.subdevice<netlist_mame_sound_device>("irem_audio:snd_nl");
 	if (nl_device)
 	{
 		nl_device->set_setup_func([](netlist::nlparse_t &setup)
