@@ -185,12 +185,13 @@ void myosd_speed_hack(running_machine& machine)
 	{
 		nl_device->set_setup_func([](netlist::nlparse_t &setup)
 		{
+			LOCAL_SOURCE(kidniki)
 			INCLUDE(kidniki)
-			PARAM(SOLVER.FREQ, 24000) //Halve the Solver's running frequency
+			PARAM(Solver.FREQ, 24000) //Halve the Solver's running frequency
 			__android_log_print(ANDROID_LOG_DEBUG, "hacks", "NETLIST SETUP!!");
 		});
 
-		__android_log_print(ANDROID_LOG_DEBUG, "hacks", "hacked netlist sound to 24000");
+		__android_log_print(ANDROID_LOG_DEBUG, "hacks", "hacked irem m62 netlist sound to 24000");
 	}
 
 	__android_log_print(ANDROID_LOG_DEBUG, "hacks", "Finished adding hacks");
