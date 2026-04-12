@@ -149,6 +149,8 @@ extern "C" bool myosd_is_paused()
 #include "devices/machine/netlist.h"
 void myosd_speed_hack(running_machine& machine)
 {
+	__android_log_print(ANDROID_LOG_DEBUG, "hacks", "Adding hacks now...");
+
 	int cpu_overclock = 100;
 	auto& root_device = machine.root_device();
 
@@ -190,6 +192,8 @@ void myosd_speed_hack(running_machine& machine)
 
 		__android_log_print(ANDROID_LOG_DEBUG, "hacks", "hacked netlist sound to 24000");
 	}
+
+	__android_log_print(ANDROID_LOG_DEBUG, "hacks", "Finished adding hacks");
 }
 
 //============================================================
