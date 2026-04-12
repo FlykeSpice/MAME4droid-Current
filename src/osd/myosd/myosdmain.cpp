@@ -145,7 +145,7 @@ extern "C" bool myosd_is_paused()
     return false;
 }
 
-#include "src/mame/irem/nl_kidniki.h"
+#include "mame/irem/nl_kidniki.h"
 void myosd_speed_hack(machine& running_machine)
 {
 	int cpu_overclock = 100;
