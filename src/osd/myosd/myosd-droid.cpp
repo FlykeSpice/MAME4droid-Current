@@ -122,7 +122,7 @@ static int myosd_droid_is_paused_in_emu = 0;
 
 static int myosd_num_processors = -1;
 static int myosd_droid_no_dzsat = 0;
-static int myosd_speed_hacks = 0;
+/*static*/ int myosd_speed_hacks = 0;
 static int myosd_droid_init_game = 0;
 
 static int myosd_plugin_autofire = 0;
@@ -1081,9 +1081,6 @@ static void droid_video_draw_cb(int skip_redraw, int in_game, int in_menu, int r
     myosd_set(MYOSD_ZOOM_TO_WINDOW, myosd_droid_zoom_to_window);
 
     if(myosd_droid_init_game && running) {
-        if (myosd_speed_hacks && in_game) {
-            myosd_speed_hack();
-        }
         myosd_droid_init_game = 0;
     }
 

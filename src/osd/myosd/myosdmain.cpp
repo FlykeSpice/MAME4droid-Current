@@ -50,6 +50,8 @@ int myosd_display_height_osd;
 extern int myosd_fps;
 extern int myosd_zoom_to_window;
 
+extern int myosd_speed_hacks;
+
 //============================================================
 //  OPTIONS
 //============================================================
@@ -143,35 +145,47 @@ extern "C" bool myosd_is_paused()
     return false;
 }
 
-extern "C" void myosd_speed_hack()
+#include "src/mame/irem/nl_kidniki.h"
+void myosd_speed_hack(machine& running_machine)
 {
-    int cpu_overclock = 100;
-    if (osdInterface != nullptr && osdInterface->isMachine()) {
-        device_enumerator iter(osdInterface->machine().root_device());
-        for (device_t &device: iter) {
-            if (dynamic_cast<cpu_device *>(&device) != nullptr) {
-                cpu_device *firstcpu = downcast<cpu_device *>(&device);
+	int cpu_overclock = 100;
+	auto& root_device = running_machine.root_device();
 
-                std::string name = std::string(firstcpu->name());
-                __android_log_print(ANDROID_LOG_DEBUG, "hacks", "hacking %s", name.c_str());
-                if (name.find("R4600") != std::string::npos || name.find("TMS34010") != std::string::npos) {
-                    cpu_overclock = 60;
-                }
-                else if (name.find("SH-2") != std::string::npos)
-                {
-                    //cpu_overclock = 55;
-                    cpu_overclock = 90;//now we have DRC
-                }
-                else
-                {
-                    cpu_overclock = 90;
-                }
-                firstcpu->set_clock_scale((float) cpu_overclock * 0.01f);
-                __android_log_print(ANDROID_LOG_DEBUG, "hacks", "hacked to %d", cpu_overclock);
-                break;
-            }
-        }
-    }
+	device_enumerator iter(root_device);
+	for (device_t &device: iter) {
+		if (dynamic_cast<cpu_device *>(&device) != nullptr) {
+			cpu_device *firstcpu = downcast<cpu_device *>(&device);
+
+			std::string name = std::string(firstcpu->name());
+			__android_log_print(ANDROID_LOG_DEBUG, "hacks", "hacking %s", name.c_str());
+			if (name.find("R4600") != std::string::npos || name.find("TMS34010") != std::string::npos) {
+				cpu_overclock = 60;
+			}
+			else if (name.find("SH-2") != std::string::npos)
+			{
+				//cpu_overclock = 55;
+				cpu_overclock = 90;//now we have DRC
+			}
+			else
+			{
+				cpu_overclock = 90;
+			}
+			firstcpu->set_clock_scale((float) cpu_overclock * 0.01f);
+			__android_log_print(ANDROID_LOG_DEBUG, "hacks", "hacked to %d", cpu_overclock);
+			break;
+		}
+	}
+
+	//FlykeSpice: Irem M62 sound netlist speed hack
+	auto *nl_device = root_device.subdevice<netlist_mame_sound_device>("snd_nl");
+	if (nl_device)
+	{
+		nl_device.set_setup_func([](netlist::nlparse_t &setup)
+		{
+			INCLUDE(kidniki)
+			PARAM(SOLVER.FREQ, 24000) //Halve the Solver's running frequency
+		});
+	}
 }
 
 //============================================================
@@ -729,6 +743,11 @@ void my_osd_interface::init(running_machine &machine)
         options.set_value(OPTION_SOUND, "none", OPTION_PRIORITY_MAXIMUM);
         options.set_value(OPTION_VIDEO, "none", OPTION_PRIORITY_MAXIMUM);
         options.set_value(OPTION_SECONDS_TO_RUN, bench, OPTION_PRIORITY_MAXIMUM);
+    }
+
+    if (myosd_speed_hacks)
+    {
+	    myosd_speed_hack(machine);
     }
 
     // check for HISCORE
