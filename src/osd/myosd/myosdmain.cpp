@@ -185,7 +185,10 @@ void myosd_speed_hack(running_machine& machine)
 		{
 			INCLUDE(kidniki)
 			PARAM(SOLVER.FREQ, 24000) //Halve the Solver's running frequency
+			__android_log_print(ANDROID_LOG_DEBUG, "hacks", "NETLIST SETUP!!");
 		});
+
+		__android_log_print(ANDROID_LOG_DEBUG, "hacks", "hacked netlist sound to 24000");
 	}
 }
 
