@@ -146,10 +146,11 @@ extern "C" bool myosd_is_paused()
 }
 
 #include "mame/irem/nl_kidniki.h"
-void myosd_speed_hack(machine& running_machine)
+#include "devices/machine/netlist.h"
+void myosd_speed_hack(running_machine& machine)
 {
 	int cpu_overclock = 100;
-	auto& root_device = running_machine.root_device();
+	auto& root_device = machine.root_device();
 
 	device_enumerator iter(root_device);
 	for (device_t &device: iter) {
@@ -170,7 +171,7 @@ void myosd_speed_hack(machine& running_machine)
 			{
 				cpu_overclock = 90;
 			}
-			firstcpu->set_clock_scale((float) cpu_overclock * 0.01f);
+			//firstcpu->set_clock_scale((float) cpu_overclock * 0.01f);
 			__android_log_print(ANDROID_LOG_DEBUG, "hacks", "hacked to %d", cpu_overclock);
 			break;
 		}
